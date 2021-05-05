@@ -1,11 +1,13 @@
 "use strict";
 
 const { Client } = require("pg");
-const { getDatabaseUri } = require("./config");
+const { getDatabaseUri, PORT } = require("./config");
 
 const db = new Client({
   connectionString: getDatabaseUri(),
-  ssl:true
+  port: PORT,
+  ssl:true,
+  dialect: "postgres",
 });
 
 db.connect();
