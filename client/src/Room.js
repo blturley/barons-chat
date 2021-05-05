@@ -52,6 +52,11 @@ function Room() {
     const videoId = normalurl.substr(normalurl.length - 11);
     return "https://www.youtube.com/v/" + videoId + "?version=3";
   }
+  async function sendJoinData() {
+    if (roomUserData && roomData) ws.send(JSON.stringify(
+      { type: "join", nickname: roomUserData.nickname, roomid: roomData.id, 
+      namecolor: roomUserData.namecolor, userid: roomUserData.userid, avatar: userData.avatar }))
+  }
 
   /* ------------------------------------------------------------------------------------------- */
 
@@ -207,16 +212,12 @@ function Room() {
       }
       
     }
-    async function sendJoinData() {
-      if (roomUserData && roomData) ws.send(JSON.stringify(
-        { type: "join", nickname: roomUserData.nickname, roomid: roomData.id, 
-        namecolor: roomUserData.namecolor, userid: roomUserData.userid, avatar: userData.avatar }))
-    }
 
     if (ws && roomUserData && roomData && userData && messagesRef.current.length === 0) {
       addEvents();
-      sendJoinData();
     }
+
+    if (ws.readyState === 1) sendJoinData;
 
   }, [ws, roomUserData, roomData, userData]);
 
