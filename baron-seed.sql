@@ -4,7 +4,7 @@ VALUES (1, 'testuser',
         'test@test.com'),
         (2, 'testuser2',
         '$2b$12$AZH7virni5jlTTiGgEg4zu3lSvAw68qVEfSIOjJ3RqtbJbdW/Oi5q',
-        'test@test.com');
+        'test2@test.com');
 
 INSERT INTO rooms (id, roomname, roomowner, isprivate, style, invitelink)
 VALUES (1, 'test room', 1, 'false', 'default', '666666');
