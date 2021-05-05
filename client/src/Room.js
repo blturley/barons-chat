@@ -37,9 +37,9 @@ function Room() {
   function alterUrlForWebsocket(baseurl){
     let replacedurl;
     if (baseurl.includes("https")) {
-      replacedurl = baseurl.replace("http", "w");
-    } else {
       replacedurl = baseurl.replace("http", "ws");
+    } else {
+      replacedurl = baseurl.replace("http", "wss");
     }
     return replacedurl + "/chat/";
   }
