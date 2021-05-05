@@ -77,6 +77,7 @@ class User {
 
   /// get user by ID. Returns { id, username, email, rooms: [ roomid, nickname, namecolor, font, isadmin, isbanned ] }
   static async getbyId(id) {
+    console.log(id);
     const res = await db.query(
           `SELECT id,
                   username,
