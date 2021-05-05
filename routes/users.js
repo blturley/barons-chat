@@ -26,7 +26,7 @@ router.get("/", async function (req, res, next) {
 
 
 /// get specific user by ID
-router.get("/getbyid/:id", ensureCorrectUserIdOrJanie, async function (req, res, next) {
+router.get("/getbyid/:id", async function (req, res, next) {
   try {
     const user = await User.getbyId(req.params.id);
     return res.json({ user });
