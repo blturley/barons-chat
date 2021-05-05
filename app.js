@@ -30,7 +30,7 @@ app.use("/api/users", usersRoutes);
 app.use("/api/roomusers", roomusersRoutes);
 
 /// websockets path
-app.wss('/api/chat/:id', function(ws, req) {
+app.ws('/api/chat/:id', function(ws, req) {
   ws.on('message', function(data) {
     try {
       let msg = JSON.parse(data);
