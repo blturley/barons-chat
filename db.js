@@ -4,7 +4,8 @@ const { Client } = require("pg");
 const { getDatabaseUri } = require("./config");
 
 const db = new Client({
-  connectionString: getDatabaseUri()
+  connectionString: getDatabaseUri(),
+  ssl: { rejectUnauthorized: false }
 });
 
 db.connect();
