@@ -1,6 +1,6 @@
 "use strict";
 const jsonschema = require("jsonschema");
-const User = require("../models/user");
+const User = require("../models/User");
 const express = require("express");
 const router = new express.Router();
 const { createToken } = require("../helpers/tokens");
