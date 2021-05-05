@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
-import "./App.css";
 import Home from "./Home";
 import Login from "./Login";
 import NavBar from "./NavBar";
@@ -11,6 +10,11 @@ import LogOut from "./LogOut";
 import Api from "./api";
 import TokenContext from "./TokenContext";
 import StyleContext from "./StyleContext";
+/// css
+import "./bootstrap-grid.css";
+import "./bootstrap-reboot.css";
+import "./bootstrap.css";
+import "./App.css";
 
 function App() {
   const [token, setToken] = useState("");
