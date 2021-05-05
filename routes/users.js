@@ -28,6 +28,10 @@ router.get("/", async function (req, res, next) {
 /// get specific user by ID
 router.get("/getbyid/:id", ensureCorrectUserIdOrJanie, async function (req, res, next) {
   try {
+    const luser = res.locals.user;
+    if (!(luser && (luser.isjanie || luser.id === +req.params.id))) {
+      throw new UnauthorizedError();
+    }
     const user = await User.getbyId(req.params.id);
     return res.json({ user });
   } catch (err) {

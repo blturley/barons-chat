@@ -43,8 +43,9 @@ function ensureJanie(req, res, next) {
 function ensureCorrectUserIdOrJanie(req, res, next) {
   try {
     const user = res.locals.user;
-    if (!user) throw new UnauthorizedError();
-    if (!user.isjanie && user.id !== +req.params.id) throw new UnauthorizedError();
+    if (!(user && (user.isjanie || user.id === +req.params.id))) {
+      throw new UnauthorizedError();
+    }
     return next();
   } catch (err) {
     return next(err);
