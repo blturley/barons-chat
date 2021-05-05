@@ -30,7 +30,7 @@ function ensureLoggedIn(req, res, next) {
 
 function ensureJanie(req, res, next) {
   try {
-    if (!res.locals.user || !res.locals.user.isjanie) {
+    if (!res.locals.user || res.locals.user.isjanie === "false") {
       throw new UnauthorizedError();
     }
     return next();
@@ -43,7 +43,7 @@ function ensureJanie(req, res, next) {
 function ensureCorrectUserIdOrJanie(req, res, next) {
   try {
     const user = res.locals.user;
-    if (!(user && (user.isjanie || user.id === +req.params.id))) {
+    if (!(user && (user.isjanie === "true" || user.id === +req.params.id))) {
       throw new UnauthorizedError();
     }
     return next();
