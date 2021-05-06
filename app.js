@@ -89,9 +89,16 @@ app.ws('/api/chat/:id', function(ws, req) {
           }
         }
       }
-      else if (msg.type === "playerupdate" || msg.type === "skip") {
+      else if (msg.type === "skip") {
         for (let client of expressWs.getWss().clients) {
           if (client.roomid == req.params.id && client.readystate === expressWs.OPEN) {          
+            client.send(JSON.stringify(msg));
+          }
+        }
+      }
+      else if (msg.type === "playerupdate") {
+        for (let client of expressWs.getWss().clients) {
+          if (client.roomid == req.params.id && client.readystate === expressWs.OPEN && client.userid !== ws.userid) {          
             client.send(JSON.stringify(msg));
           }
         }
