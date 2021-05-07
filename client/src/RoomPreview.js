@@ -12,6 +12,10 @@ function User({ room, isowner, getRooms, userid }) {
   const [invalidUrl, setInvalidUrl] = useState(false);
   const token = useContext(TokenContext);
   Api.token = token;
+  const linkUrl = 
+  (Api.baseUrl === "http://localhost:3001/api" ||  Api.baseUrl === "http://localhost:3001/api") ? 
+  Api.baseUrl.substring(0, Api.baseUrl.length - 5) + "0/room/" :
+  Api.baseUrl.substring(0, Api.baseUrl.length - 4) + "/room/";
 
   async function submitEdit(formData) {
     if (!validateUrl(formData.thumbnail)) formData.thumbnail = "default";
@@ -49,7 +53,7 @@ function User({ room, isowner, getRooms, userid }) {
       <img src={room.thumbnail} style={{width:"200px"}}/>}
       <h3><Link to={`/room/${room.invitelink}`}>{room.roomname}</Link></h3>
       <p>Invite Link: <span style={{color:"black", backgroundColor:"white"}}>
-        {Api.baseUrl.substring(0, Api.baseUrl.length - 4) + "/room/" + room.invitelink}</span></p>
+        {linkUrl + room.invitelink}</span></p>
       {!isowner &&
       <div>
         {!leavebtn && <button onClick={()=>setLeavebtn(!leavebtn)} className="btn btn-danger btn-sm">Leave room</button>}
