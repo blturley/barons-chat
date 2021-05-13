@@ -48,7 +48,7 @@ function User({ submitForm }) {
   }
 
   return (
-    <section className="text-center">
+    <section className="text-center" style={{width:"100%"}}>
       {!edit &&
       <span>
       <h1>Account</h1>
