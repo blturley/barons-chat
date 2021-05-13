@@ -26,7 +26,7 @@ function Home() {
   }
 
   return (
-    <section className="text-center">
+    <section className="text-center" style={{width:"100%"}}>
       {userData.avatar === 'default' ? 
       <img src={DefaultAvatar} style={{width:"100px"}}/> : 
       <img src={userData.avatar} style={{width:"100px"}}/>

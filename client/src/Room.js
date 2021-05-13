@@ -306,7 +306,7 @@ function Room() {
     /* ------------------------------------------------------------------------------------------- */
 
     return (
-      <section style={{overflowY: "auto", overflowX: "hidden"}}>       
+      <section>   
         <div className="row">
         <section className="col-3">
           </section >

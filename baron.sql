@@ -3,4 +3,3 @@ CREATE DATABASE baron;
 \connect baron
 
 \i baron-schema.sql
-\i baron-seed.sql
