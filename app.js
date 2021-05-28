@@ -113,6 +113,21 @@ app.ws('/api/chat/:id', function(ws, req) {
           }
         }
       }
+      else if (msg.type === 'rejoin'){
+        ws.roomid = msg.roomid;
+        ws.nickname = msg.nickname;
+        ws.namecolor = msg.namecolor; 
+        ws.userid = msg.userid;
+        ws.avatar = msg.avatar; 
+      }
+      else if (msg.type === 'closed'){
+        expressWs.getWss().clients.forEach(function(client) {
+          if (client.roomid == req.params.id && client.readystate === expressWs.OPEN) {
+            client.send(JSON.stringify({type: 'note', text: `${ws.nickname} has left`}));
+            client.send(JSON.stringify({type: 'left', userid: ws.userid})); 
+          }
+        })
+      }
       else if (msg.type === 'join'){
         ws.roomid = msg.roomid;
         ws.nickname = msg.nickname;
@@ -146,18 +161,6 @@ app.ws('/api/chat/:id', function(ws, req) {
       console.error(err);
     }
   }); 
-  ws.on('close', function() {
-    try {
-      expressWs.getWss().clients.forEach(function(client) {
-          if (client.roomid == req.params.id && client.readystate === expressWs.OPEN) {
-            client.send(JSON.stringify({type: 'note', text: `${ws.nickname} has left`}));
-            client.send(JSON.stringify({type: 'left', userid: ws.userid})); 
-          }
-        })
-    } catch (err) {
-      console.error(err);
-    }
-  });
 })
 
 

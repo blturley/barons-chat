@@ -29,6 +29,8 @@ function Room() {
   const playlistRef = useRef([]);
   const playerRef = useRef([]);
   const pushedButtonRef = useRef(true);
+  const wsUrlRef = useRef();
+  const closedRef = useRef(false);
   Api.token = token;
 
   /* ------------------------------------------------------------------------------------------- */
@@ -60,8 +62,8 @@ function Room() {
     async function getData() {
       let room = await Api.getRoomByInvitelink(invitelink);
       let user = await Api.getUserById(decodedToken.id);
-      const websocketUrl = alterUrlForWebsocket(Api.baseUrl) + `${room.id}`
-      if (!ws) setWs(new WebSocket(websocketUrl));
+      wsUrlRef.current = alterUrlForWebsocket(Api.baseUrl) + `${room.id}`;
+      if (!ws) setWs(new WebSocket(wsUrlRef.current));
       setRoomData(room);
       setUserData(user);
     }
@@ -82,7 +84,7 @@ function Room() {
 
   /// chat functionality
   useEffect(() => {
-    async function addEvents() { 
+    async function addEvents(ws) { 
       ws.addEventListener('message', function(msg) {
         let parsedmsg = JSON.parse(msg.data);
         if (parsedmsg.type === "post") {
@@ -129,6 +131,16 @@ function Room() {
         setPlaylist([...playlistRef.current]);
         setTimeout(function(){ pushedButtonRef.current = true; }, 1000);
         }
+      })
+      ws.addEventListener('close', function() {
+        if (!roomUserData || !userData || !roomData || closedRef.current) return;
+        let newWs = new WebSocket(wsUrlRef.current);
+        setWs(newWs);
+        setTimeout(function(){ newWs.send(JSON.stringify(
+          { type: "rejoin", nickname: roomUserData.nickname, roomid: roomData.id, 
+          namecolor: roomUserData.namecolor, userid: roomUserData.userid, avatar: userData.avatar }));
+          addEvents(newWs);
+        }, 1000);
       })
     }
     async function updateMessages(data) {
@@ -207,15 +219,8 @@ function Room() {
       }
       
     }
-    /* async function sendJoinData() {
-      if (roomUserData && roomData) ws.send(JSON.stringify(
-        { type: "join", nickname: roomUserData.nickname, roomid: roomData.id, 
-        namecolor: roomUserData.namecolor, userid: roomUserData.userid, avatar: userData.avatar }))
-    } */
-
-    if (ws && roomUserData && roomData && userData && messagesRef.current.length === 0) {
-      addEvents();
-      /* sendJoinData(); */
+    if (ws && roomUserData && roomData && userData && messagesRef.current.length === 0 && !closedRef.current) {
+      addEvents(ws);
     }
 
   }, [ws, roomUserData, roomData, userData]);
@@ -223,7 +228,11 @@ function Room() {
   /// cleanup
   useEffect(() => {
     return () => {
-      if (ws) ws.close();
+      if (ws) {
+        closedRef.current = true;
+        ws.send(JSON.stringify({ type: "closed" }));
+        ws.close();
+      }
     }
   }, [ws])
 
@@ -266,6 +275,7 @@ function Room() {
         namecolor: roomUserData.namecolor, userid: roomUserData.userid, avatar: userData.avatar }))
     }
     function whenPlayerPaused(event) {
+      setPlayerActive(true);
       if (pushedButtonRef.current) ws.send(JSON.stringify(
         { type: "playerupdate", state: 2, time: "pause" }));
     }
