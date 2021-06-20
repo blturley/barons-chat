@@ -227,12 +227,18 @@ function Room() {
 
   /// cleanup
   useEffect(() => {
-    return () => {
+    const cleanup = () => {
       if (ws) {
         closedRef.current = true;
         ws.send(JSON.stringify({ type: "closed" }));
         ws.close();
       }
+    }
+    /// cleanup if tab closes
+    window.addEventListener('beforeunload', cleanup);
+    return () => {
+      cleanup();
+      window.removeEventListener('beforeunload', cleanup);
     }
   }, [ws])
 
